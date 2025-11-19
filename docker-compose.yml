@@ -191,6 +191,25 @@ services:
       kafka:                                    
         condition: service_healthy
 
+#analytics service
+  analytics-service:
+    build:
+      context: ./analytics-service
+      dockerfile: Dockerfile
+    container_name: analytics-service
+    ports:
+      - "3010:3010"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=analytics-service
+    networks:
+      - microservices-net
+    depends_on:
+      # kafka-init:  
+      #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
 networks:
   microservices-net:
     driver: bridge
