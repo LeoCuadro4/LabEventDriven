@@ -126,13 +126,15 @@ services:
     environment:
       - KAFKA_BROKER=kafka:29092
       - SERVICE_NAME=email-service
-      - EMAIL_USER=tuemail@gmail.com
-      - EMAIL_PASS=clave_aplicacion
+      - EMAIL_USER=sheila.valencia@correounivalle.edu.co
+      - EMAIL_PASS=pnoz fnzp xutc srbl
     depends_on:
       # kafka-init:  
       #   condition: service_completed_successfully
       kafka:                                    
         condition: service_healthy
+    networks:
+      - microservices-net
 
 #shipping service
   shipping-service:
