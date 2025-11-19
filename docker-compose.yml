@@ -115,6 +115,25 @@ services:
       kafka:                                    
         condition: service_healthy
 
+# Payment service
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "3004:3004"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=payment-service
+    networks:
+      - microservices-net
+    depends_on:
+      # kafka-init:  
+      #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
 networks:
   microservices-net:
     driver: bridge
