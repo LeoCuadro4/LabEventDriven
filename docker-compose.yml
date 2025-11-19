@@ -103,7 +103,7 @@ services:
       dockerfile: Dockerfile
     container_name: inventory-service
     ports:
-      - "3003:3003"
+      - "3005:3005"
     environment:
       - KAFKA_BROKER=kafka:29092
       - SERVICE_NAME=inventory-service
@@ -112,6 +112,23 @@ services:
     depends_on:
       # kafka-init:  
       #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
+# Order Service - Creates and tracks orders
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "3003:3003"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=order-service
+    networks:
+      - microservices-net
+    depends_on:
       kafka:                                    
         condition: service_healthy
 
@@ -126,6 +143,26 @@ services:
     environment:
       - KAFKA_BROKER=kafka:29092
       - SERVICE_NAME=payment-service
+    networks:
+      - microservices-net
+    depends_on:
+      # kafka-init:  
+      #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
+
+#shipping service
+  shipping-service:
+    build:
+      context: ./shipping-service
+      dockerfile: Dockerfile
+    container_name: shipping-service
+    ports:
+      - "3006:3006"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=shipping-service
     networks:
       - microservices-net
     depends_on:
