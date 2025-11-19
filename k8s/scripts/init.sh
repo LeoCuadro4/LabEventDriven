@@ -8,9 +8,16 @@ minikube start
 echo "Setting Docker environment for Minikube..."
 eval $(minikube -p minikube docker-env)
 
-# Build all images
-docker build -t user-service:latest ../../user-service
+# Navigate to repo root
+cd "$(dirname "$0")/../.."
 
+# Build all images
+echo "Building user-service..."
+docker build -t user-service:latest ./user-service
+
+echo "Building order-service..."
+docker build -t order-service:latest ./order-service
 
 # Verify images are in Minikube
+echo "Verifying images..."
 docker images | grep service

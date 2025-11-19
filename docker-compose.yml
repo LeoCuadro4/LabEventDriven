@@ -115,6 +115,23 @@ services:
       kafka:                                    
         condition: service_healthy
 
+# Order Service - Creates and tracks orders
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "3004:3004"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=order-service
+    networks:
+      - microservices-net
+    depends_on:
+      kafka:                                    
+        condition: service_healthy
+
 networks:
   microservices-net:
     driver: bridge
