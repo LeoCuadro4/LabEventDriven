@@ -17,6 +17,9 @@ docker build -t product-service:latest ../../product-service
 docker build -t shipping-service:latest ../../shipping-service
 docker build -t analytics-service:latest ../../analytics-service
 docker build -t inventory-service:latest ../../inventory-service
+docker build -t payment-service:latest ./payment-service
+
+docker build -t email-service:latest ../../email-service
 
 echo "Building order-service..."
 docker build -t order-service:latest ./order-service

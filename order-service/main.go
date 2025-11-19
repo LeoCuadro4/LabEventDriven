@@ -96,7 +96,7 @@ func main() {
 
 	// Start HTTP server
 	srv := &http.Server{
-		Addr:    ":3004",
+		Addr:    ":3003",
 		Handler: http.DefaultServeMux,
 	}
 
@@ -117,7 +117,7 @@ func main() {
 		}
 	}()
 
-	log.Printf("Order Service running on port 3004")
+	log.Printf("Order Service running on port 3003")
 	log.Printf("Connected to Kafka broker: %s", kafkaBroker)
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
