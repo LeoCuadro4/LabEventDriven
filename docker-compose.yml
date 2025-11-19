@@ -103,7 +103,7 @@ services:
       dockerfile: Dockerfile
     container_name: inventory-service
     ports:
-      - "3003:3003"
+      - "3005:3005"
     environment:
       - KAFKA_BROKER=kafka:29092
       - SERVICE_NAME=inventory-service
@@ -128,6 +128,23 @@ services:
       - SERVICE_NAME=email-service
       - EMAIL_USER=tuemail@gmail.com
       - EMAIL_PASS=clave_aplicacion
+    depends_on:
+      # kafka-init:  
+      #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
+#shipping service
+  shipping-service:
+    build:
+      context: ./shipping-service
+      dockerfile: Dockerfile
+    container_name: shipping-service
+    ports:
+      - "3006:3006"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=shipping-service
     networks:
       - microservices-net
     depends_on:
