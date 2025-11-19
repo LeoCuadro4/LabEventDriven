@@ -18,3 +18,5 @@ docker build -t analytics-service:latest ../../analytics-service
 # Verify images are in Minikube
 docker images | grep service
 docker images | grep product-service
+docker images | grep shipping-service
+docker images | grep analytics-service
