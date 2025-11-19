@@ -6,8 +6,8 @@ metadata:
 data:
   KAFKA_BROKER: "kafka:29092"
   SERVICE_NAME: "email-service"
-  EMAIL_USER: "sheila.valencia@correounivalle.edu.co"
-  EMAIL_PASS: "pnoz fnzp xutc srbl"
+  EMAIL_USER: "notificaciones.labeventdriven@gmail.com"
+  EMAIL_PASS: "suni htqt utdk uuhj"
 ---
 apiVersion: v1
 kind: Service
