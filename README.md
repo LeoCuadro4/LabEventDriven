@@ -6,22 +6,64 @@
 
 **Repository Structure**
 
-- **`docker-compose.yml`**: Local composition of the full stack (Zookeeper, Kafka, a `kafka-init` helper that creates topics, and the example `user-service`). Used for local development and to create topics locally.
+- **`docker-compose.yml`**: Local composition of the full stack (Zookeeper, Kafka, and microservices). Used for local development and to create topics locally.
 - **`k8s/`**: Kubernetes manifests and helper scripts used to create images and deploy services to a cluster.
-  - **`k8s/services/`**: Kubernetes YAML files. Current files: `kafka.yml`, `zookeeper.yml`, `kafka-init.yml`, `user-service.yml`, `namespace.yml`. Add new microservice manifests here (one file per service).
+  - **`k8s/services/`**: Kubernetes YAML files. Current files: `kafka.yml`, `zookeeper.yml`, `namespace.yml`, `user-service.yml`, `product-service.yml`, `inventory-service.yml`, `order-service.yml`. Add new microservice manifests here (one file per service).
   - **`k8s/scripts/`**: Bash scripts used to build images and control the environment:
     - `init.sh` — builds/creates docker images and any preparation needed for deployment.
     - `start-services.sh` — applies `k8s/services/*.yml` to start services in Kubernetes and creates `kubectl port-forward` entries for local access.
     - `delete-services.sh` — removes Kubernetes resources created for services.
     - `delete-images.sh` — removes docker images used by services (clean up local images after tests).
-- **`user-service/`**: Example microservice (producer) used by the demo.
+- **`user-service/`**: User management microservice (Node.js). Publishes `user.created` and `user.updated` events.
   - `Dockerfile` — image build instructions for the user-service.
   - `index.js` — service source (node app).
   - `package.json` — node dependencies and scripts.
+- **`product-service/`**: Product catalog microservice (Node.js). Publishes `product.created` and `product.updated` events.
+- **`inventory-service/`**: Inventory tracking microservice (Node.js). Consumes order and product events, publishes inventory updates.
+- **`order-service/`**: Order management microservice (Go). Creates and tracks orders, publishes `order.created` and `order.completed`, consumes `payment.success` events.
+  - `Dockerfile` — multi-stage build for Go service.
+  - `main.go` — service implementation in Go.
+  - `go.mod`, `go.sum` — Go dependencies.
+
+**Microservices Architecture**
+
+This project implements an event-driven microservices architecture with the following services:
+
+1. **User Service** (Port 3001, Node.js)
+   - Manages user accounts
+   - Publishes: `user.created`, `user.updated`
+
+2. **Product Service** (Port 3002, Node.js)
+   - Manages product catalog
+   - Publishes: `product.created`, `product.updated`
+
+3. **Order Service** (Port 3003, Go) ⭐
+   - Creates and tracks orders
+   - Publishes: `order.created`, `order.completed`
+   - Consumes: `payment.success`
+   - **Flow**: Creates order → Waits for payment → Completes order → Triggers inventory/shipping
+
+4. **Inventory Service** (Port 3005, Node.js)
+   - Tracks stock levels
+   - Publishes: `inventory.updated`
+   - Consumes: `order.created`, `order.completed`, `product.created`
+
+**Event Flow Example:**
+
+```
+1. Client → POST /orders → Order Service
+2. Order Service → publishes order.created → Kafka
+3. Payment Service → consumes order.created → processes payment
+4. Payment Service → publishes payment.success → Kafka
+5. Order Service → consumes payment.success → updates order status
+6. Order Service → publishes order.completed → Kafka
+7. Inventory Service → consumes order.completed → updates stock
+8. Shipping Service → consumes order.completed → initiates shipment
+```
 
 **Important files and what they do**
 
-- `docker-compose.yml`: starts `zookeeper`, `kafka`, `kafka-init` (topic creation job) and `user-service`. When adding a new service for local testing, add it under the `services:` section here.
+- `docker-compose.yml`: starts `zookeeper`, `kafka`, and all microservices (`user-service`, `product-service`, `inventory-service`, `order-service`). When adding a new service for local testing, add it under the `services:` section here.
 - `k8s/services/kafka-init.yml`: this YAML contains the container/entrypoint that runs `kafka-topics` commands to create the topics needed. Add your topic creation command here so the cluster init creates your topic automatically.
 - `k8s/services/<your-service>.yml`: Kubernetes `Deployment` + `Service` for your microservice. Add one file per microservice in this folder.
 - `k8s/scripts/init.sh`: script to build your docker image(s). Add the `docker build`/`docker push` (if you use a registry) commands for your service here.
