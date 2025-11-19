@@ -107,7 +107,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'inventory-service' });
 });
 
-const PORT = 3003;
+const PORT = 3005;
 app.listen(PORT, () => {
   console.log(`Inventory Service running on port ${PORT}`);
 });
