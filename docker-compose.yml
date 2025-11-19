@@ -115,6 +115,23 @@ services:
       kafka:                                    
         condition: service_healthy
 
+#SMS Service
+  sms-service:
+    build:
+      context: ./sms-service
+      dockerfile: Dockerfile
+    container_name: sms-service
+    ports:
+      - "3008:3008"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=sms-service
+    networks:
+      - microservices-net
+    depends_on:
+      #kafka-init:
+      #  condition: service_completed_successfully
+      kafka:
 # Email Service
   email-service:
     build:

@@ -45,6 +45,11 @@ echo "--- Waiting for Product Service ---"
 # FIX: Do not use 'pod --all'. Target the specific app label instead.
 kubectl wait --for=condition=ready pod -l app=product-service -n microservices --timeout=180s
 
+echo "--- Deploying SMS Service ---"
+kubectl apply -f ../services/sms-service.yml
+echo "--- Waiting for SMS Service ---"
+kubectl wait --for=condition=ready pod -l app=sms-service -n microservices --timeout=180s
+
 echo "--- Deploying Payment Service ---"
 kubectl apply -f ../services/payment-service.yml
 
@@ -79,6 +84,7 @@ echo "--- Port Forwarding ---"
  
 kubectl port-forward -n microservices svc/user-service 3001:3001 &
 kubectl port-forward -n microservices svc/product-service 3002:3002 &
+kubectl port-forward -n microservices svc/sms-service 3008:3008 &
 kubectl port-forward -n microservices svc/payment-service 3004:3004 &
 
 echo "Deployment complete. User Service accessible at localhost:3001"
