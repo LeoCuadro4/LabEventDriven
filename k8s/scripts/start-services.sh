@@ -26,6 +26,12 @@ echo "Waiting for User Service pod to be created..."
 sleep 5
 kubectl wait --for=condition=ready pod -l app=user-service -n microservices --timeout=180s
 
+echo "--- Deploying Email Service ---"
+kubectl apply -f ../services/email-service.yml
+
+echo "--- Waiting for Email Service ---"
+kubectl wait --for=condition=ready pod -l app=email-service -n microservices --timeout=180s
+
 echo "--- Deploying Order Service ---"
 kubectl apply -f ../services/order-service.yml
 echo "Waiting for Order Service pod to be created..."
