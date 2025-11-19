@@ -10,7 +10,9 @@ eval $(minikube -p minikube docker-env)
 
 # Build all images
 docker build -t user-service:latest ../../user-service
+docker build -t product-service:latest ../../product-service
 
 
 # Verify images are in Minikube
 docker images | grep service
+docker images | grep product-service
