@@ -115,6 +115,26 @@ services:
       kafka:                                    
         condition: service_healthy
 
+
+#shipping service
+  shipping-service:
+    build:
+      context: ./shipping-service
+      dockerfile: Dockerfile
+    container_name: shipping-service
+    ports:
+      - "3006:3006"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=shipping-service
+    networks:
+      - microservices-net
+    depends_on:
+      # kafka-init:  
+      #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
 networks:
   microservices-net:
     driver: bridge
