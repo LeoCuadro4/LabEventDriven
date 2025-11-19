@@ -1,5 +1,7 @@
 #!/bin/bash
 
 # Delete by name and tag
-docker rmi -f user-service:latest || true
-docker rmi -f order-service:latest || true
+docker rmi order-service:latest
+docker rmi inventory-service:latest
+docker rmi notification-service:latest
+docker rmi shipping-service:latest
