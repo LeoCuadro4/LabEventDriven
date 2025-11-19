@@ -20,6 +20,13 @@ echo "--- Waiting for User Service ---"
 # FIX: Do not use 'pod --all'. Target the specific app label instead.
 kubectl wait --for=condition=ready pod -l app=user-service -n microservices --timeout=180s
 
+echo "--- Deploying Email Service ---"
+kubectl apply -f ../services/email-service.yml
+
+echo "--- Waiting for Email Service ---"
+kubectl wait --for=condition=ready pod -l app=email-service -n microservices --timeout=180s
+
+
 echo "--- All Resources ---"
 kubectl get all -n microservices
 

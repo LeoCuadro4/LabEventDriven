@@ -115,6 +115,27 @@ services:
       kafka:                                    
         condition: service_healthy
 
+# Email Service
+  email-service:
+    build:
+      context: ./email-service
+      dockerfile: Dockerfile
+    container_name: email-service
+    ports:
+      - "3007:3007"
+    environment:
+      - KAFKA_BROKER=kafka:29092
+      - SERVICE_NAME=email-service
+      - EMAIL_USER=tuemail@gmail.com
+      - EMAIL_PASS=clave_aplicacion
+    networks:
+      - microservices-net
+    depends_on:
+      # kafka-init:  
+      #   condition: service_completed_successfully
+      kafka:                                    
+        condition: service_healthy
+
 networks:
   microservices-net:
     driver: bridge
