@@ -103,7 +103,7 @@ services:
       dockerfile: Dockerfile
     container_name: inventory-service
     ports:
-      - "3003:3003"
+      - "3005:3005"
     environment:
       - KAFKA_BROKER=kafka:29092
       - SERVICE_NAME=inventory-service
