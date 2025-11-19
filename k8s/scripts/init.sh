@@ -12,6 +12,7 @@ eval $(minikube -p minikube docker-env)
 docker build -t user-service:latest ../../user-service
 docker build -t product-service:latest ../../product-service
 docker build -t shipping-service:latest ../../shipping-service
+docker build -t analytics-service:latest ../../analytics-service
 
 
 # Verify images are in Minikube
